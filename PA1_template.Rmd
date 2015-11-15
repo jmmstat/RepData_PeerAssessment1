@@ -104,7 +104,7 @@ Now we can reproduce the time series plot (Chart 2 above) for weekdays compared 
 
 ```{r}
 library(lattice)
-xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CHART 4: Comparison of Weekday v Weekend Activity Levels")
+xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CHART 4: Comparison of Weekday vs Weekend Activity Levels")
 ```
 
 The evenness of the weekend activity pattern is apparent when compared to the activity spike in the mornings during the week.
