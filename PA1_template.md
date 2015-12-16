@@ -12,7 +12,7 @@ activity <- read.csv(unzip("activity.zip"),header = TRUE)
 ```
 The variables included in this dataset are:
 
-    steps: Number of steps taking in a 5-minute interval (missing values are coded as NA)
+    steps: Number of steps taken in a 5-minute interval (missing values are coded as NA)
 
     date: The date on which the measurement was taken in YYYY-MM-DD format
 
@@ -40,7 +40,7 @@ We visualize the daily effort levels using a histogram, then get the summary sta
 hist(daily$TotalSteps,xlab = "Number of Steps per Day", main = "CHART 1: Histogram of Steps per Day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/HistogramStepsperDay-1.png) 
 
 ```r
 summary(daily$TotalSteps,na.rm = TRUE, digits=6)
@@ -67,11 +67,29 @@ library(Hmisc)
 minor.tick(nx=5, tick.ratio=0.5)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/DailyActivityPattern-1.png) 
+
+## Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+We can use the dataset created for the graph above to find the maximum average number of steps per 5 minute period (visually around 8-9 am according to the Chart 2).
+
+
+```r
+intervals[intervals$meansteps==max(intervals$meansteps),]
+```
+
+```
+## Source: local data frame [1 x 2]
+## 
+##   interval meansteps
+##      (int)     (dbl)
+## 1      835  206.1698
+```
+
+And we find that at 835 am the maximum number of steps (206.17) is attained.
 
 ## Imputing missing values
 
-First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (2304), and the proportion of the total that represents (0.1311475).
+First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (2304), and the proportion of the total that represents (0.1311475 on average over the 61 days with reported data).
 
 Next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
 
@@ -90,7 +108,7 @@ indaily <- activity %>% group_by(date) %>% summarise(total = sum(insteps))
 hist(as.integer(indaily[,2][[1]]),xlab = "Estimated Number of Steps per Day", main = "CHART 3: Histogram of Steps per Day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/histAdjustedSteps-1.png) 
 
 The differences are subtle, but the modal column is over 35 for the estimated steps, but under 30 for actual reported steps (see chart 1 above).
 
@@ -127,9 +145,9 @@ Now we can reproduce the time series plot (Chart 2 above) for weekdays compared 
 
 ```r
 library(lattice)
-xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CHART 4: Comparison of Weekday v Weekend Activity Levels")
+xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CHART 4: Comparison of Weekday vs Weekend Activity Levels")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/WeekdayWeekendComparisons-1.png) 
 
 The evenness of the weekend activity pattern is apparent when compared to the activity spike in the mornings during the week.

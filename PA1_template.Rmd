@@ -11,12 +11,12 @@ output:
   
   We begin the exercise by reading in the "activity" data set using the "read.csv" command - after unzipping the compressed file:
 
-```{r}
+```{r readData}
 activity <- read.csv(unzip("activity.zip"),header = TRUE)
 ```
 The variables included in this dataset are:
 
-    steps: Number of steps taking in a 5-minute interval (missing values are coded as NA)
+    steps: Number of steps taken in a 5-minute interval (missing values are coded as NA)
 
     date: The date on which the measurement was taken in YYYY-MM-DD format
 
@@ -38,7 +38,7 @@ daily <- activity %>% group_by(date) %>% summarize(TotalSteps = sum(steps))
 
 We visualize the daily effort levels using a histogram, then get the summary statistics through the "summary" function.
 
-```{r}
+```{r HistogramStepsperDay}
 hist(daily$TotalSteps,xlab = "Number of Steps per Day", main = "CHART 1: Histogram of Steps per Day")
 summary(daily$TotalSteps,na.rm = TRUE, digits=6)
 ```
@@ -50,7 +50,7 @@ Here, the mean (`r format(mean(daily$TotalSteps,na.rm=TRUE))`) and median (`r fo
 
 This question can be answered by averaging across days for the 5-minute intervals (288 = 12 per hour times 24 hours).
 
-```{r,message=FALSE}
+```{r DailyActivityPattern,message=FALSE}
 intervals <- activity %>% group_by(interval) %>% summarise(meansteps = mean(steps,na.rm=TRUE))
 plot(intervals,type = "l",ylab="Mean Number of Steps per 5 Minutes",main="CHART 2: Daily Activity Pattern",xlab="Five Minute Intervals",xaxt = "n")
 axis(1,at=seq(0,2400,600),labels = c("0","6am","Noon","6pm","Mid"))
@@ -58,13 +58,22 @@ library(Hmisc)
 minor.tick(nx=5, tick.ratio=0.5)
 ```
 
+## Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+We can use the dataset created for the graph above to find the maximum average number of steps per 5 minute period (visually around 8-9 am according to the Chart 2).
+
+```{r find max 5-minute period over all days}
+intervals[intervals$meansteps==max(intervals$meansteps),]
+```
+
+And we find that at `r intervals[intervals$meansteps==max(intervals$meansteps),1][[1]]` am the maximum number of steps (`r format(intervals[intervals$meansteps==max(intervals$meansteps),2][[1]],digits=5)`) is attained.
+
 ## Imputing missing values
 
-First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (`r sum(is.na(activity[,1]))`), and the proportion of the total that represents (`r sum(is.na(activity[,1]))/length(activity[,1])`).
+First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (`r sum(is.na(activity[,1]))`), and the proportion of the total that represents (`r sum(is.na(activity[,1]))/length(activity[,1])` on average over the 61 days with reported data).
 
 Next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
 
-```{r}
+```{r processNAs}
 activity$insteps <- activity$steps
 xx <- intervals$meansteps
 activity$insteps[is.na(activity$steps)] <- xx[findInterval(activity$interval[is.na(activity$steps)],intervals$interval)]
@@ -72,7 +81,7 @@ activity$insteps[is.na(activity$steps)] <- xx[findInterval(activity$interval[is.
 
 Now we look at what has been distorted by the estimation of NAs. First, a histogram of total (in)steps per day:
 
-```{r}
+```{r histAdjustedSteps}
 indaily <- activity %>% group_by(date) %>% summarise(total = sum(insteps))
 hist(as.integer(indaily[,2][[1]]),xlab = "Estimated Number of Steps per Day", main = "CHART 3: Histogram of Steps per Day")
 ```
@@ -102,7 +111,7 @@ actweeks <- activity %>% group_by(weekday,interval) %>% summarise(meansteps = me
 
 Now we can reproduce the time series plot (Chart 2 above) for weekdays compared to weekends using the Lattice package:
 
-```{r}
+```{r WeekdayWeekendComparisons}
 library(lattice)
 xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CHART 4: Comparison of Weekday vs Weekend Activity Levels")
 ```
