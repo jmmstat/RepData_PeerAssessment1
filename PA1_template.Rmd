@@ -117,3 +117,9 @@ xyplot(meansteps ~ interval | weekday,actweeks,type="l",layout=c(1,2),main = "CH
 ```
 
 The evenness of the weekend activity pattern is apparent when compared to the activity spike in the mornings during the week.
+
+#### FInally, session information.
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+sessionInfo()
+```
