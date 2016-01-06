@@ -22,7 +22,7 @@ The variables included in this dataset are:
 
     interval: Identifier for the 5-minute interval in which measurement was taken
 
-There are a total of 17568 observations: equal to 288 5-minute intervals on 61 days.
+There are a total of `r dim(activity)[[1]]` observations: equal to 288 5-minute intervals on 61 days.
 
 
 ## What is mean total number of steps taken per day?
@@ -71,7 +71,9 @@ And we find that at `r intervals[intervals$meansteps==max(intervals$meansteps),1
 
 First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (`r sum(is.na(activity[,1]))`), and the proportion of the total that represents (`r sum(is.na(activity[,1]))/length(activity[,1])` on average over the 61 days with reported data).
 
-Next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
+Arguably, the NA replacement scheme would take into account both the time of day and day of the week (to anticipate a later analysis). However, some days have nothing but NAs, so it would require a completely manufactured dataset for that day, a complication that is beyond this course. 
+
+So, next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
 
 ```{r processNAs}
 activity$insteps <- activity$steps

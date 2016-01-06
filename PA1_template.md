@@ -91,7 +91,9 @@ And we find that at 835 am the maximum number of steps (206.17) is attained.
 
 First, in order to get a handle on the magnitude of the missing values problem, we compute the number of cases with NAs in them (2304), and the proportion of the total that represents (0.1311475 on average over the 61 days with reported data).
 
-Next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
+Arguably, the NA replacement scheme would take into account both the time of day and day of the week (to anticipate a later analysis). However, some days have nothing but NAs, so it would require a completely manufactured dataset for that day, a complication that is beyond this course. 
+
+So, next, we replace the NAs with "predicted" values which are computed as the average for that time period. We create a new variable "insteps" to hold the new, complete set of values.  "Insteps" starts as a duplicate of the "steps" variables, then the NAs are replaced:
 
 
 ```r
@@ -160,7 +162,7 @@ sessionInfo()
 ```
 
 ```
-## R version 3.2.2 (2015-08-14)
+## R version 3.2.3 (2015-12-10)
 ## Platform: i386-w64-mingw32/i386 (32-bit)
 ## Running under: Windows XP (build 2600) Service Pack 3
 ## 
@@ -181,14 +183,14 @@ sessionInfo()
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.11.5         cluster_2.0.3       knitr_1.11         
-##  [4] magrittr_1.5        MASS_7.3-43         splines_3.2.2      
+##  [4] magrittr_1.5        MASS_7.3-45         splines_3.2.3      
 ##  [7] munsell_0.4.2       colorspace_1.2-5    R6_2.0.1           
-## [10] stringr_0.6.2       plyr_1.8.1          tcltk_3.2.2        
-## [13] tools_3.2.2         nnet_7.3-10         parallel_3.2.2     
+## [10] stringr_0.6.2       plyr_1.8.1          tcltk_3.2.3        
+## [13] tools_3.2.3         nnet_7.3-11         parallel_3.2.3     
 ## [16] gtable_0.1.2        latticeExtra_0.6-26 DBI_0.3.1          
 ## [19] htmltools_0.2.6     yaml_2.1.13         lazyeval_0.1.10    
 ## [22] assertthat_0.1      digest_0.6.8        RColorBrewer_1.1-2 
 ## [25] reshape2_1.4.1      formatR_1.0         acepack_1.3-3.3    
 ## [28] rpart_4.1-10        evaluate_0.8        rmarkdown_0.8.1    
-## [31] scales_0.2.4        foreign_0.8-65      proto_0.3-10
+## [31] scales_0.2.4        foreign_0.8-66      proto_0.3-10
 ```
